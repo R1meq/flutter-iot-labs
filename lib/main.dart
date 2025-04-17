@@ -10,6 +10,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.teal,
         ),
       ),
-      initialRoute: '/login',
+      initialRoute: '/registration',
       routes: {
         '/login': (ctx) => const LoginPage(),
         '/registration': (ctx) => const RegistrationPage(),
