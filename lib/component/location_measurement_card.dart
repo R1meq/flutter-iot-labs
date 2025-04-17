@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:iot_flutter/component/measurement_card.dart';
 
-// Updated LocationMeasurementCard that generates random values
 class LocationMeasurementCard extends StatelessWidget {
   final String name;
   final String location;
