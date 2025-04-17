@@ -46,7 +46,6 @@ class LocationMeasurementCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Card header with name and location
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
