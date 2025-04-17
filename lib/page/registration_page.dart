@@ -30,36 +30,48 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<void> _register() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        final users = await _userStorage.getUsers();
-        final emailExists = users
-            .any((user) => user.email == emailController.text.trim());
+  final currentContext = context;
 
-        if (emailExists) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
-            Text('User with this email already exists'), ),
-          );
-          return;
-        }
+  if (_formKey.currentState!.validate()) {
+    try {
+      final scaffoldMessenger = ScaffoldMessenger.of(currentContext);
+      final navigator = Navigator.of(currentContext);
 
-        final newUser = User(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: nameController.text.trim(),
-          email: emailController.text.trim(),
-          password: passwordController.text,
-        );
+      final users = await _userStorage.getUsers();
+      final emailExists = users
+          .any((user) => user.email == emailController.text.trim());
 
-        await _userStorage.registerUser(newUser);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful!')),
+      if (!mounted) return;
+
+      if (emailExists) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(content:
+          Text('User with this email already exists'), ),
         );
-        Navigator.pushReplacementNamed(context, '/home');
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration error: ${e.toString()}')),
-        );
+        return;
+      }
+
+      final newUser = User(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
+
+      await _userStorage.registerUser(newUser);
+
+      if (!mounted) return;
+
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Registration successful!')),
+      );
+      navigator.pushReplacementNamed('/home');
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration error: ${e.toString()}')),
+       );
       }
     }
   }
