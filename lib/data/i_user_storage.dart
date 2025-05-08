@@ -8,4 +8,5 @@ abstract class IUserStorage {
   Future<void> logoutUser();
   Future<bool> isUserLoggedIn();
   Future<void> updateUser(User updatedUser);
+  Future<User?> getLoggedInUser();
 }

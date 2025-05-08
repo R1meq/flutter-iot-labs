@@ -67,4 +67,25 @@ class LocationMeasurementData {
       airQuality: json['airQuality'] as String,
     );
   }
+
+  LocationMeasurementData copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? location,
+    String? temperature,
+    String? humidity,
+    String? airQuality,
+  }) {
+    return LocationMeasurementData(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      location: location ?? this.location,
+      temperature: temperature ?? this.temperature,
+      humidity: humidity ?? this.humidity,
+      airQuality: airQuality ?? this.airQuality,
+    );
+  }
+
 }

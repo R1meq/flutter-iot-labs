@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot_flutter/component/custom_text_field.dart';
 import 'package:iot_flutter/data/user_storage.dart';
+import 'package:iot_flutter/utils/network_monitor.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,8 +15,28 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _userStorage = UserStorage();
+  bool isOffline = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAlreadyLoggedIn();
+  }
 
   Future<void> _login() async {
+    final bool isConnected = await NetworkMonitor.checkConnection();
+    if (!isConnected) {
+      if (!mounted) return;
+      setState(() {
+        isOffline = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(
+            'No internet connection available. Please check your network.',),),
+      );
+      return;
+    }
+
     if (_formKey.currentState!.validate()) {
       try {
         final user = await _userStorage.login(
@@ -39,6 +60,14 @@ class _LoginPageState extends State<LoginPage> {
           SnackBar(content: Text('Login error: ${e.toString()}')),
         );
       }
+    }
+  }
+
+  Future<void> _checkAlreadyLoggedIn() async {
+    final isLoggedIn = await _userStorage.isUserLoggedIn();
+    if (isLoggedIn && UserStorage.loggedUser != null) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
