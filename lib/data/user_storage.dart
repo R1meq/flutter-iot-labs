@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserStorage implements IUserStorage {
   static const _userKey = 'users';
   static const _isLoggedInKey = 'is_logged_in';
+  static const _loggedInEmailKey = 'logged_in_email';
+  static const _loggedInUserKey = 'logged_in_user';
   static User? loggedUser;
 
   @override
@@ -18,16 +20,38 @@ class UserStorage implements IUserStorage {
 
     final encoded = jsonEncode(users.map((e) => e.toJSON()).toList());
     await prefs.setString(_userKey, encoded);
+
+    await _saveLoggedInUser(user);
   }
 
   @override
   Future<User?> login(String email, String password) async {
-    final prefs = await SharedPreferences.getInstance();
-
     loggedUser = await getUser(email, password);
-    await prefs.setBool(_isLoggedInKey, true);
-
+    if (loggedUser != null) {
+      await _saveLoggedInUser(loggedUser!);
+    }
     return loggedUser;
+  }
+
+  @override
+  Future<User?> getLoggedInUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool(_isLoggedInKey) ?? false;
+
+    if (!isLoggedIn) return null;
+
+    final userData = prefs.getString(_loggedInUserKey);
+    if (userData != null) {
+      try {
+        final userJson = jsonDecode(userData) as Map<String, dynamic>;
+        loggedUser = User.fromJSON(userJson);
+        return loggedUser;
+      } catch (e) {
+        await logoutUser();
+        return null;
+      }
+    }
+    return null;
   }
 
   @override
@@ -67,6 +91,7 @@ class UserStorage implements IUserStorage {
       await prefs.setString(_userKey, encoded);
       if (loggedUser != null && loggedUser!.id == updatedUser.id) {
         loggedUser = updatedUser;
+        await _saveLoggedInUser(updatedUser);
       }
     } else {
       throw Exception('User not found');
@@ -78,6 +103,8 @@ class UserStorage implements IUserStorage {
     final prefs = await SharedPreferences.getInstance();
     loggedUser = null;
     await prefs.setBool(_isLoggedInKey, false);
+    await prefs.remove(_loggedInEmailKey);
+    await prefs.remove(_loggedInUserKey);
   }
 
   @override
@@ -86,4 +113,10 @@ class UserStorage implements IUserStorage {
     return prefs.getBool(_isLoggedInKey) ?? false;
   }
 
+  Future<void> _saveLoggedInUser(User user) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_isLoggedInKey, true);
+    await prefs.setString(_loggedInEmailKey, user.email);
+    await prefs.setString(_loggedInUserKey, jsonEncode(user.toJSON()));
+  }
 }
