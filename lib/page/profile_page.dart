@@ -79,6 +79,36 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _showLogoutConfirmation() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed ?? false) {
+      _logout();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: _logout,
+            onPressed: _showLogoutConfirmation,
             tooltip: 'Logout',
           ),
         ],
@@ -167,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _logout,
+                onPressed: _showLogoutConfirmation,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red.shade200,
                 ),
