@@ -259,10 +259,8 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Always visible action buttons
             _buildActionButtons(),
             const SizedBox(height: 30),
-            // Content area that changes based on locations
             Expanded(
               child: _locations.isEmpty
                   ? _buildEmptyLocationsList()
