@@ -43,7 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
         locations: locations,
         mqttStatus: status,
         isOffline: false,
-      ));
+      ),);
       _manageMqttConnection(locations);
     } catch (e) {
       emit(HomeError('Failed to load locations: $e'));
@@ -109,7 +109,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> _saveUpdatedLocations(
-      List<LocationMeasurementData> locations) async {
+      List<LocationMeasurementData> locations,) async {
     try {
       for (var location in locations) {
         await _storage.saveMeasurement(location);

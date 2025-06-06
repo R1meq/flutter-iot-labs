@@ -26,7 +26,7 @@ class ActionButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(builder:
-                    (_) => const QRScannerPage()
+                    (_) => const QRScannerPage(),
                 ),
               );
             },
@@ -50,12 +50,12 @@ class ActionButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(builder:
-                    (_) => const DeviceMessagePage()
+                    (_) => const DeviceMessagePage(),
                 ),
               );
             },
             icon: const Icon(Icons.message, size: 20),
-            label: const Text('Device Messages'),
+            label: const Text('Device Messages',),
           ),
         ),
       ],

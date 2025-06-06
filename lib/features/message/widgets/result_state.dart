@@ -33,7 +33,7 @@ class ResultState extends StatelessWidget {
                   title,
                   style: const TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 12),

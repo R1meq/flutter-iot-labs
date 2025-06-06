@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Profile', style:
-          Theme.of(context).textTheme.titleLarge),
+          Theme.of(context).textTheme.titleLarge,),
         ),
         body: const ProfileForm(),
       ),

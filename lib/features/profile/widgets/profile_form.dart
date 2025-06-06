@@ -100,21 +100,21 @@ class _ProfileFormState extends State<ProfileForm> {
                 ],
                 const SizedBox(height: 10),
                 Text('Email: ${user.email}',
-                    style: Theme.of(context).textTheme.bodyMedium),
+                    style: Theme.of(context).textTheme.bodyMedium,),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () =>
                       Navigator.pushReplacementNamed(context, '/home'),
                   child: Text('Go to Home Page',
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => showLogoutConfirmationDialog(context),
                   style: ElevatedButton
-                      .styleFrom(backgroundColor: Colors.red.shade200),
+                      .styleFrom(backgroundColor: Colors.red.shade200,),
                   child: Text('Logout',
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,),
                 ),
               ],
             ),

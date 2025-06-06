@@ -56,7 +56,7 @@ class HomeView extends StatelessWidget {
                   context,
                     MaterialPageRoute<void>(builder:
                         (_) => const ProfilePage()
-                    )
+                    ),
                 ),
               ),
               IconButton(

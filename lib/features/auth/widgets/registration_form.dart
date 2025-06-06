@@ -38,7 +38,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   void _showSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message))
+        SnackBar(content: Text(message),)
     );
   }
 

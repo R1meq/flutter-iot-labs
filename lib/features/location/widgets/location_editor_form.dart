@@ -92,7 +92,7 @@ class _LocationEditorFormState extends State<LocationEditorForm> {
                 onPressed: _submitForm,
               );
             },
-          )
+          ),
         ],
       ),
     );

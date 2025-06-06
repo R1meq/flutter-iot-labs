@@ -70,19 +70,19 @@ class QRScannerView extends StatelessWidget {
                   children: [
                     const Icon(Icons.check_circle,
                         color: Colors.green,
-                        size: 48
+                        size: 48,
                     ),
                     const SizedBox(height: 16),
                     const Text(
                       'QR code successfully sent!',
                       style: TextStyle(fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Data: ${state.data}',
                       style: const TextStyle(fontSize: 14
-                          , color: Colors.grey),
+                          , color: Colors.grey,),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
