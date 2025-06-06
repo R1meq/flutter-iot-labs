@@ -8,7 +8,9 @@ import 'package:iot_flutter/data/user_storage.dart';
 import 'package:iot_flutter/model/location_measurement_data.dart';
 import 'package:iot_flutter/model/mqtt_handler.dart';
 import 'package:iot_flutter/page/location_editor_page.dart';
+import 'package:iot_flutter/page/message_view_screen.dart';
 import 'package:iot_flutter/page/profile_page.dart';
+import 'package:iot_flutter/page/qr_scanner_screen.dart';
 import 'package:iot_flutter/utils/network_monitor.dart';
 import 'package:iot_flutter/utils/sensor_formatter.dart';
 import 'package:logger/logger.dart';
@@ -221,8 +223,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('My Locations',
-          style: Theme.of(context).textTheme.titleLarge, ),
+        title: Text(
+          'My Locations',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         backgroundColor: AppColors.background,
         elevation: 0,
         actions: [
@@ -237,8 +241,9 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<void>
-                  (builder: (context) => const ProfilePage(), ),
+                MaterialPageRoute<void>(
+                  builder: (context) => const ProfilePage(),
+                ),
               );
             },
             tooltip: 'Profile',
@@ -250,46 +255,130 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _locations.isEmpty
-          ? _buildEmptyState()
-          : ListView.builder(
-        itemCount: _locations.length,
-        itemBuilder: (context, index) {
-          final location = _locations[index];
-          return Dismissible(
-            key: Key(location.id),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 20),
-              color: Colors.red,
-              child: const Icon(Icons.delete, color: Colors.white),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            _buildActionButtons(),
+            const SizedBox(height: 30),
+            Expanded(
+              child: _locations.isEmpty
+                  ? _buildEmptyLocationsList()
+                  : _buildLocationsList(),
             ),
-            onDismissed: (_) => _deleteLocation(location.id),
-            child: GestureDetector(
-              onTap: () => _editLocation(location),
-              child: LocationMeasurementCard(
-                name: location.name,
-                location: location.location,
-                temperature: location.temperature,
-                humidity: location.humidity,
-                airQuality: location.airQuality,
-              ),
-            ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
-  Widget _buildEmptyState() {
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 3,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<QRScannerScreen>(
+                  builder: (context) => const QRScannerScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.qr_code_scanner, size: 20),
+            label: const Text(
+              'Scan QR Code',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 3,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<DeviceMessageScreen>(
+                  builder: (context) => const DeviceMessageScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.message, size: 20),
+            label: const Text(
+              'Device Messages',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLocationsList() {
+    return ListView.builder(
+      itemCount: _locations.length,
+      itemBuilder: (context, index) {
+        final location = _locations[index];
+        return Dismissible(
+          key: Key(location.id),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            color: Colors.red,
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          onDismissed: (_) => _deleteLocation(location.id),
+          child: GestureDetector(
+            onTap: () => _editLocation(location),
+            child: LocationMeasurementCard(
+              name: location.name,
+              location: location.location,
+              temperature: location.temperature,
+              humidity: location.humidity,
+              airQuality: location.airQuality,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyLocationsList() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.location_off, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text('No locations yet',
-            style: Theme.of(context).textTheme.titleMedium, ),
+          Text(
+            'No locations yet',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.add),
