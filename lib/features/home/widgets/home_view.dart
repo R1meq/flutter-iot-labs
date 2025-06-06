@@ -55,7 +55,7 @@ class HomeView extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                     MaterialPageRoute<void>(builder:
-                        (_) => const ProfilePage()
+                        (_) => const ProfilePage(),
                     ),
                 ),
               ),
