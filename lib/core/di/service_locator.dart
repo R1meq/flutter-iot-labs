@@ -19,24 +19,30 @@ void setupDependencies() {
   getIt.registerLazySingleton<Logger>(Logger.new);
 
   getIt.registerLazySingleton<UserStorage>(UserStorage.new);
-  getIt.registerLazySingleton<LocationMeasurementStorage>
-    (LocationMeasurementStorage.new,);
-  getIt.registerLazySingleton<UsbSerialService>(UsbSerialService.new,);
+  getIt.registerLazySingleton<LocationMeasurementStorage>(
+    LocationMeasurementStorage.new,
+  );
+  getIt.registerLazySingleton<UsbSerialService>(UsbSerialService.new);
   getIt.registerLazySingleton(() =>
-      AppStartupService(userStorage: getIt<UserStorage>()),);
+      AppStartupService(userStorage: getIt<UserStorage>()),
+  );
 
   getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt<UserStorage>()),);
   getIt.registerFactory(() => DeviceMessageCubit(getIt<UsbSerialService>()),);
-  getIt.registerFactory(() => ProfileCubit(getIt<UserStorage>()),);
-  getIt.registerFactory(() => QRScannerCubit(getIt<UsbSerialService>()),);
+  getIt.registerFactory(() => ProfileCubit(getIt<UserStorage>()));
+  getIt.registerFactory(() => QRScannerCubit(getIt<UsbSerialService>()));
+
   getIt.registerFactory<HomeCubit>(() =>
-      HomeCubit(getIt<LocationMeasurementStorage>(), getIt<MqttHandler>(),),);
+      HomeCubit(getIt<LocationMeasurementStorage>(), getIt<MqttHandler>(),),
+  );
   getIt.registerFactory(() =>
-      LocationEditorCubit(getIt<LocationMeasurementStorage>()),);
+      LocationEditorCubit(getIt<LocationMeasurementStorage>()),
+  );
 
   getIt.registerLazySingleton<MqttServerClient>(createMqttClient);
-  getIt.registerLazySingleton<MqttHandler>(() =>
-      MqttHandler(getIt<MqttServerClient>(), getIt<Logger>(),),);
+  getIt.registerLazySingleton<MqttHandler>(
+        () => MqttHandler(getIt<MqttServerClient>(), getIt<Logger>(),),
+  );
 }
 
 

@@ -28,9 +28,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateUserName(String newName) async {
     if (state is! ProfileLoaded) return;
 
-    final current = state as ProfileLoaded;
-    final updatedUser = current.user.copyWith(name: newName.trim());
+    final current = state;
 
+    if (current is! ProfileLoaded) return;
+
+    final updatedUser = current.user.copyWith(name: newName.trim());
     try {
       await _userStorage.updateUser(updatedUser);
       emit(ProfileLoaded(user: updatedUser));

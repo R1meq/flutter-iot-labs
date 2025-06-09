@@ -10,7 +10,6 @@ class DeviceMessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fetchMessage() => context.read<DeviceMessageCubit>().fetchMessage();
     return BlocBuilder<DeviceMessageCubit, DeviceMessageState>(
       builder: (context, state) {
         if (state is DeviceMessageInitial || state is DeviceMessageLoading) {
@@ -21,7 +20,7 @@ class DeviceMessageView extends StatelessWidget {
             iconColor: Colors.blue,
             title: 'Last Message',
             content: state.message,
-            onRefresh: fetchMessage,
+            onRefresh: () => context.read<DeviceMessageCubit>().fetchMessage(),
           );
         } else if (state is DeviceMessageError) {
           return ResultState(
@@ -29,7 +28,7 @@ class DeviceMessageView extends StatelessWidget {
             iconColor: Colors.red,
             title: 'Error',
             content: state.error,
-            onRefresh: fetchMessage,
+            onRefresh: () => context.read<DeviceMessageCubit>().fetchMessage(),
           );
         } else {
           return const SizedBox.shrink();

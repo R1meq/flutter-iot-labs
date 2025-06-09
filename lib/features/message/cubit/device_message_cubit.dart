@@ -6,7 +6,9 @@ import 'package:iot_flutter/features/message/cubit/device_message_state.dart';
 class DeviceMessageCubit extends Cubit<DeviceMessageState> {
   final UsbSerialService _usbService;
 
-  DeviceMessageCubit(this._usbService) : super(DeviceMessageInitial());
+  DeviceMessageCubit(this._usbService) : super(DeviceMessageInitial()) {
+    fetchMessage();
+  }
 
   Future<void> fetchMessage() async {
     emit(DeviceMessageLoading());

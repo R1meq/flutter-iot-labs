@@ -11,7 +11,7 @@ class DeviceMessagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<DeviceMessageCubit>()..fetchMessage(),
+      create: (_) => getIt<DeviceMessageCubit>(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Device Messages'),

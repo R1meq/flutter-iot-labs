@@ -70,7 +70,7 @@ class _LocationEditorFormState extends State<LocationEditorForm> {
                   label: 'Name',
                   icon: Icons.label,
                   validator: (value) =>
-                  value!.isEmpty ? 'Name is required' : null,
+                  (value?.isEmpty ?? true) ? 'Name is required' : null,
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
@@ -78,7 +78,7 @@ class _LocationEditorFormState extends State<LocationEditorForm> {
                   label: 'Address',
                   icon: Icons.location_on,
                   validator: (value) =>
-                  value!.isEmpty ? 'Address is required' : null,
+                  (value?.isEmpty ?? true) ? 'Address is required' : null,
                 ),
               ],
             ),
