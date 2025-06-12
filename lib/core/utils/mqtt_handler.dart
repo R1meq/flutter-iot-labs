@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -46,12 +47,17 @@ class MqttHandler {
       client.disconnect();
     }
 
-    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+    final connectionStatus = client.connectionStatus;
+    if (connectionStatus == null) {
+      statusNotifier.value = 'Connection failed: Status unavailable';
+      client.disconnect();
+      return;
+    }
+
+    if (connectionStatus.state == MqttConnectionState.connected) {
       statusNotifier.value = 'Connected';
     } else {
-      statusNotifier.value =
-      'Connection failed: ${client.connectionStatus!.state}';
-
+      statusNotifier.value = 'Connection failed: ${connectionStatus.state}';
       client.disconnect();
     }
   }
@@ -81,7 +87,13 @@ class MqttHandler {
   }
 
   void listenForMessages(void Function(Map<String, dynamic>) callback) {
-    client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+    final updates = client.updates;
+    if (updates == null) {
+      logger.w('MQTT client updates stream is null. Listener not attached.');
+      return;
+    }
+
+    updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final MqttPublishMessage message = c[0].payload as MqttPublishMessage;
       final payload = MqttPublishPayload
           .bytesToStringAsString(message.payload.message);

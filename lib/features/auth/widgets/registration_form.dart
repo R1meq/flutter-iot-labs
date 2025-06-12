@@ -27,7 +27,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   void _register() {
-    if (_formKey.currentState!.validate()) {
+    final formState = _formKey.currentState;
+    if (formState == null) return;
+    if (formState.validate()) {
       context.read<AuthCubit>().register(
         name: _nameController.text,
         email: _emailController.text,

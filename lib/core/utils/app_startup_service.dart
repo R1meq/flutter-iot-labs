@@ -11,10 +11,12 @@ class AppStartupService {
   static Future<Widget>? _initializationFuture;
 
   Future<Widget> getStartScreen() async {
-    if (_cachedScreen != null) return _cachedScreen!;
-
-    _initializationFuture ??= _init();
-    return await _initializationFuture!;
+    final cached = _cachedScreen;
+    if (cached != null) {
+      return cached;
+    }
+    final future = _initializationFuture ??= _init();
+    return await future;
   }
 
   Future<Widget> _init() async {
@@ -29,7 +31,6 @@ class AppStartupService {
       debugPrint('Error initializing app: $e');
       _cachedScreen = const NavigationHelper(targetRoute: '/login');
     }
-
-    return _cachedScreen!;
+    return _cachedScreen ?? const NavigationHelper(targetRoute: '/login');
   }
 }

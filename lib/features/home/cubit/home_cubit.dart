@@ -39,11 +39,9 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final locations = await _storage.getUserMeasurement();
       final status = _mqttHandler.statusNotifier.value;
-      emit(HomeLoaded(
-        locations: locations,
-        mqttStatus: status,
-        isOffline: false,
-      ),);
+      emit(
+        HomeLoaded(locations: locations, mqttStatus: status, isOffline: false),
+      );
       _manageMqttConnection(locations);
     } catch (e) {
       emit(HomeError('Failed to load locations: $e'));
@@ -89,27 +87,31 @@ class HomeCubit extends Cubit<HomeState> {
         message.containsKey('sensorType')) {
       final sensorType = message['sensorType'].toString();
       final rawValue = message['value'];
-      final formattedValue = SensorFormatter
-          .formatSensorValue(sensorType, rawValue);
-      final updatedLocations = current.locations.map((location) {
-        switch (sensorType) {
-          case 'temperature':
-            return location.copyWith(temperature: formattedValue);
-          case 'humidity':
-            return location.copyWith(humidity: formattedValue);
-          case 'airQuality':
-            return location.copyWith(airQuality: formattedValue);
-          default:
-            return location;
-        }
-      }).toList();
+      final formattedValue = SensorFormatter.formatSensorValue(
+        sensorType,
+        rawValue,
+      );
+      final updatedLocations =
+          current.locations.map((location) {
+            switch (sensorType) {
+              case 'temperature':
+                return location.copyWith(temperature: formattedValue);
+              case 'humidity':
+                return location.copyWith(humidity: formattedValue);
+              case 'airQuality':
+                return location.copyWith(airQuality: formattedValue);
+              default:
+                return location;
+            }
+          }).toList();
       emit(current.copyWith(locations: updatedLocations));
       _saveUpdatedLocations(updatedLocations);
     }
   }
 
   Future<void> _saveUpdatedLocations(
-      List<LocationMeasurementData> locations,) async {
+    List<LocationMeasurementData> locations,
+  ) async {
     try {
       for (var location in locations) {
         await _storage.saveMeasurement(location);

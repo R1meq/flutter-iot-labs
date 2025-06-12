@@ -37,7 +37,8 @@ class _LocationEditorFormState extends State<LocationEditorForm> {
   }
 
   void _submitForm() {
-    if (!_formKey.currentState!.validate()) return;
+    final formState = _formKey.currentState;
+    if (formState == null || !formState.validate()) return;
     final updatedLocation = widget.location.copyWith(
       name: _nameController.text,
       location: _locationController.text,

@@ -39,7 +39,7 @@ class LocationsList extends StatelessWidget {
                   builder: (_) => LocationEditorPage(location: location),
                 ),
               );
-              if (edited == true) {
+              if (edited ?? false) {
                 onReloadLocations();
               }
             },

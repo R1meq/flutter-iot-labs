@@ -27,8 +27,9 @@ class UserStorage implements IUserStorage {
   @override
   Future<User?> login(String email, String password) async {
     loggedUser = await getUser(email, password);
-    if (loggedUser != null) {
-      await _saveLoggedInUser(loggedUser!);
+    final user = loggedUser;
+    if (user != null) {
+      await _saveLoggedInUser(user);
     }
     return loggedUser;
   }
@@ -89,7 +90,8 @@ class UserStorage implements IUserStorage {
       users[index] = updatedUser;
       final encoded = jsonEncode(users.map((e) => e.toJSON()).toList());
       await prefs.setString(_userKey, encoded);
-      if (loggedUser != null && loggedUser!.id == updatedUser.id) {
+      final user = loggedUser;
+      if (user != null && user.id == updatedUser.id) {
         loggedUser = updatedUser;
         await _saveLoggedInUser(updatedUser);
       }

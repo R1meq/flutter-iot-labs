@@ -31,7 +31,8 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _submitLogin() {
-    if (_formKey.currentState!.validate()) {
+    final formState = _formKey.currentState;
+    if (formState != null && formState.validate()) {
       context.read<AuthCubit>().login(
         email: emailController.text,
         password: passwordController.text,

@@ -22,7 +22,11 @@ class UsbSerialService {
       }
 
       _usbPort = await availableDevices.first.create();
-      final connectionResult = await _usbPort!.open();
+      final usbPort = _usbPort;
+      if (usbPort == null) {
+        throw Exception('USB port is not initialized');
+      }
+      final connectionResult = await usbPort.open();
 
       if (!connectionResult) {
         _usbPort = null;
@@ -38,10 +42,11 @@ class UsbSerialService {
   }
 
   Future<void> _configurePortSettings() async {
-    if (_usbPort == null) return;
-    await _usbPort!.setDTR(true);
-    await _usbPort!.setRTS(true);
-    await _usbPort!.setPortParameters(
+    final usbPort = _usbPort;
+    if (usbPort == null) return;
+    await usbPort.setDTR(true);
+    await usbPort.setRTS(true);
+    await usbPort.setPortParameters(
       _baudRate,
       _dataBits,
       _stopBits,
@@ -56,8 +61,10 @@ class UsbSerialService {
     }
 
     try {
+      final usbPort = _usbPort;
+      if (usbPort == null) return false;
       final messageBytes = Uint8List.fromList(message.codeUnits);
-      await _usbPort!.write(messageBytes);
+      await usbPort.write(messageBytes);
       return true;
     } catch (e) {
       return false;
@@ -71,15 +78,24 @@ class UsbSerialService {
     }
 
     try {
+      final usbPort = _usbPort;
+      if (usbPort == null) return null;
+
+      final inputStream = usbPort.inputStream;
+      if (inputStream == null) return null;
+
       final commandBytes = Uint8List.fromList('$command\n'.codeUnits);
-      await _usbPort!.write(commandBytes);
+      await usbPort.write(commandBytes);
 
       _dataTransaction = Transaction.stringTerminated(
-        _usbPort!.inputStream!,
+        inputStream,
         Uint8List.fromList([13, 10]),
       );
 
-      final response = await _dataTransaction!.stream.first
+      final transaction = _dataTransaction;
+      if (transaction == null) return null;
+
+      final response = await transaction.stream.first
           .timeout(const Duration(seconds: 5));
 
       return response.trim();
